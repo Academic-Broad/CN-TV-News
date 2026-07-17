@@ -1,0 +1,140 @@
+[
+  {
+    "title": "World Of AI",
+    "summary": "f you look closely at BBC News, the homepage isn't just a random list of articles. It uses a highly intentional layout hierarchy:",
+    "content": "<p>If you look closely at BBC News, the homepage isn't just a random list of articles. It uses a highly intentional layout hierarchy:</p><ul><li><p><strong>The \"Hero\" Section:</strong> One massive, eye-catching headline on the left (or center) with a large, high-quality image. This is always your most important story of the day.</p></li><li><p><strong>Secondary Story Grid:</strong> Next to or directly below the Hero, they place 3 to 4 smaller card layouts (an image + a bold headline + a short description) for other major stories.</p></li><li><p><strong>The \"Most Read\" Sidebar:</strong> A clean, numbered list (usually 1 to 10) on the right-hand side. This keeps users clicking through the site by showing what's trending.</p></li><li><p><strong>Topic-Based Shelves:</strong> As you scroll down, the site is broken into clear horizontal blocks dedicated to specific categories like <em>Tech</em>, <em>Business</em>, <em>Science</em>, or <em>Entertainment</em>.</p></li></ul><h2>2. Typography and Color (The Brand Identity)</h2><p>The BBC keeps things incredibly simple so the news remains easy to read.</p><ul><li><p><strong>The Colors:</strong> A very clean palette. They use a signature deep red for accents, category labels, and breaking news banners, paired with a clean white background and dark gray (almost black) text.</p></li><li><p><strong>The Fonts:</strong> They use a clean, modern sans-serif font (like <em>Helvetica</em>, <em>Arial</em>, or their custom <em>Reith</em> font). For your site, choosing a highly legible, clean sans-serif like <strong>Inter</strong>, <strong>Roboto</strong>, or <strong>Lato</strong> will instantly give you that premium, modern editorial feel.</p></li></ul><h2>3. Recommended Tech Stack</h2><p>Because you want a multi-category, grid-heavy news portal, <strong>WordPress (Self-Hosted)</strong> is absolutely the best tool for this. It has specific themes and page builders that allow you to replicate this exact layout without writing complex custom CSS grids from scratch.</p><h3>The Best Themes for a \"BBC Style\"</h3><p>You can install these directly from your WordPress dashboard:</p><ul><li><p><strong>Newspaper (by tagDiv):</strong> The absolute king of news themes. It has pre-made \"demo\" designs that you can import with one click which look almost identical to the BBC, complete with breaking news tickers and custom post grids.</p></li><li><p><strong>Jannah:</strong> Another incredibly fast, highly customizable news theme that features great grid options and clean typography.</p></li><li><p><strong>GeneratePress (Premium) or Astra + Elementor:</strong> If you want to build the grid yourself manually, using a fast base theme like Astra paired with a drag-and-drop page builder like Elementor lets you place your \"hero\" images, story sidebars, and grid blocks exactly where you want them.</p></li></ul><h2>4. Key Features You'll Need to Setup</h2><p>To make it function like the BBC, make sure to implement these three features early on:</p><ol><li><p><strong>A \"Breaking News\" Ticker:</strong> A thin red bar running just below your header menu that scrolls your latest or most urgent headlines. (Plugins like <em>Ditty News Ticker</em> do this easily).</p></li><li><p><strong>Post Formats:</strong> Ensure your theme supports different post styles so you can easily publish regular articles, video-focused posts, or live text-update feeds.</p></li><li><p><strong>Mobile Responsiveness:</strong> Over 70% of news readers will access your site on their phones. Ensure your grids stack beautifully into a single column on mobile view.</p></li></ol><p></p><p>Where would you like to focus next to bring this BBC-style project to life?</p><p>Show me the step-by-step WordPress installation</p><p>Explain how to structure the database for a news site</p><p></p>",
+    "image": "/uploads/1784249211681-8gf4qv.png",
+    "category": "tech",
+    "authorId": "admin",
+    "publishedAt": "2026-07-16T22:45:00.000Z",
+    "status": "published",
+    "tags": [
+      "Typography and Color (The Brand Identity)"
+    ],
+    "id": "9",
+    "slug": "world-of-ai",
+    "viewCount": 0,
+    "createdAt": "2026-07-17T00:47:00.132Z",
+    "updatedAt": "2026-07-17T00:49:12.757Z"
+  },
+  {
+    "id": "1",
+    "slug": "quantum-computing-breakthrough-could-revolutionize-cryptography",
+    "title": "Quantum Computing Breakthrough Could Revolutionize Modern Cryptography",
+    "summary": "Scientists at MIT have demonstrated a 1000-qubit quantum processor that can solve complex encryption problems in minutes.",
+    "content": "In a landmark achievement that could reshape the landscape of digital security, researchers at the Massachusetts Institute of Technology have successfully demonstrated a quantum processor capable of solving complex cryptographic problems that would take classical computers thousands of years.\n\nThe breakthrough, published Thursday in the journal Nature, details the creation of a 1,000-qubit quantum processor that maintains coherence long enough to perform practical calculations.\n\nWe've crossed a critical threshold, said Dr. Elena Vasquez, the lead researcher on the project. This isn't just an incremental improvement — it's a fundamental shift in what's computationally possible.",
+    "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=600&fit=crop",
+    "category": "tech",
+    "authorId": "sarah-chen",
+    "publishedAt": "2026-07-14T10:30:00Z",
+    "status": "published",
+    "viewCount": 28450,
+    "tags": [
+      "quantum computing",
+      "cybersecurity",
+      "technology"
+    ],
+    "createdAt": "2026-07-14T09:00:00Z",
+    "updatedAt": "2026-07-14T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "slug": "global-climate-summit-reaches-historic-agreement",
+    "title": "Global Climate Summit Reaches Historic Agreement on Carbon Emissions",
+    "summary": "World leaders commit to a 60% reduction in carbon emissions by 2035, establishing the most ambitious climate targets in history.",
+    "content": "In what environmental advocates are calling the most significant climate agreement since the Paris Accord, representatives from 195 nations have committed to reducing carbon emissions by 60% below 2020 levels by 2035.\n\nThe agreement, reached after two weeks of intense negotiations in Geneva, includes binding targets for the world's largest economies and a $500 billion annual fund to help developing nations transition to clean energy.",
+    "image": "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&h=600&fit=crop",
+    "category": "world",
+    "authorId": "james-mitchell",
+    "publishedAt": "2026-07-14T08:15:00Z",
+    "status": "published",
+    "viewCount": 19230,
+    "tags": [
+      "climate change",
+      "summit",
+      "emissions"
+    ],
+    "createdAt": "2026-07-13T14:00:00Z",
+    "updatedAt": "2026-07-14T08:15:00Z"
+  },
+  {
+    "id": "4",
+    "slug": "global-markets-rally-fed-interest-rate-decision",
+    "title": "Global Markets Surge After Federal Reserve Signals Rate Cuts",
+    "summary": "Stock markets worldwide hit record highs as the Fed indicates it will begin cutting interest rates in September.",
+    "content": "Global financial markets rallied sharply on Wednesday after Federal Reserve Chair Jerome Powell signaled that the central bank is prepared to begin cutting interest rates as early as September.\n\nThe S&P 500 jumped 2.3% to close at a record high, while the Dow Jones Industrial Average gained over 800 points.",
+    "image": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=600&fit=crop",
+    "category": "business",
+    "authorId": "david-park",
+    "publishedAt": "2026-07-14T12:00:00Z",
+    "status": "published",
+    "viewCount": 15670,
+    "tags": [
+      "markets",
+      "federal reserve",
+      "interest rates"
+    ],
+    "createdAt": "2026-07-14T08:00:00Z",
+    "updatedAt": "2026-07-14T12:00:00Z"
+  },
+  {
+    "id": "5",
+    "slug": "mediterranean-diet-longevity-study-results",
+    "title": "Landmark Study Links Mediterranean Diet to 15-Year Life Extension",
+    "summary": "A 30-year study involving 120,000 participants shows the Mediterranean diet significantly reduces risk of major diseases.",
+    "content": "The largest and longest-running study on diet and longevity has produced striking results: individuals who closely follow a Mediterranean diet live an average of 15 years longer than those who don't.\n\nThe study, published in The Lancet, followed 120,000 participants across 12 countries over three decades.",
+    "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=600&fit=crop",
+    "category": "health",
+    "authorId": "emma-watson",
+    "publishedAt": "2026-07-13T09:30:00Z",
+    "status": "published",
+    "viewCount": 22340,
+    "tags": [
+      "diet",
+      "longevity",
+      "health study"
+    ],
+    "createdAt": "2026-07-12T16:00:00Z",
+    "updatedAt": "2026-07-13T09:30:00Z"
+  },
+  {
+    "id": "7",
+    "slug": "olympic-preparations-2028-los-angeles",
+    "title": "Los Angeles 2028 Olympics Unveil Revolutionary Venue Designs",
+    "summary": "Organizers reveal $1.5 billion venue plan featuring floating aquatic center and solar-powered stadiums.",
+    "content": "The organizing committee for the 2028 Los Angeles Olympics has unveiled ambitious plans for competition venues that officials say will set new standards for sustainability and architectural innovation.\n\nThe centerpiece of the design is a floating aquatic center to be constructed in the Pacific Ocean off the coast of Long Beach.",
+    "image": "https://images.unsplash.com/photo-1569517282132-25d22f4573e6?w=1200&h=600&fit=crop",
+    "category": "sports",
+    "authorId": "alex-johnson",
+    "publishedAt": "2026-07-12T11:00:00Z",
+    "status": "published",
+    "viewCount": 12450,
+    "tags": [
+      "olympics",
+      "los angeles",
+      "sports"
+    ],
+    "createdAt": "2026-07-11T09:00:00Z",
+    "updatedAt": "2026-07-12T11:00:00Z"
+  },
+  {
+    "id": "8",
+    "slug": "renewable-energy-solar-panel-efficiency-record",
+    "title": "New Solar Panel Technology Breaks Efficiency Record at 47.6%",
+    "summary": "Researchers achieve a breakthrough in perovskite-silicon tandem solar cells, nearly doubling current commercial panel efficiency.",
+    "content": "Scientists at the National Renewable Energy Laboratory have achieved a new world record in solar cell efficiency, creating a perovskite-silicon tandem cell that converts 47.6% of sunlight into electricity.\n\nThis represents the culmination of five years of research into tandem cell technology.",
+    "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=600&fit=crop",
+    "category": "science",
+    "authorId": "maria-rodriguez",
+    "publishedAt": "2026-07-11T13:15:00Z",
+    "status": "draft",
+    "viewCount": 0,
+    "tags": [
+      "solar energy",
+      "sustainability",
+      "breakthrough"
+    ],
+    "createdAt": "2026-07-11T10:00:00Z",
+    "updatedAt": "2026-07-11T13:15:00Z"
+  }
+]
