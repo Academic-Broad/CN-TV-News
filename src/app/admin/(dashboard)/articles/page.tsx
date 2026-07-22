@@ -180,7 +180,7 @@ export default function ArticlesPage() {
         </div>
       ) : (
         <>
-          <div className="rounded-lg border">
+          <div className="overflow-x-auto rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -5,7 +5,7 @@ import { Clock, Eye, Share2, Bookmark, ArrowLeft } from "lucide-react";
 import { getAllPublishedArticles, getArticleBySlug, getRelatedArticles } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { getCategoryBySlug } from "@/data/categories";
-import { getReadingTime, formatDate } from "@/lib/utils";
+import { getReadingTime, formatDate, getImageSrc } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/article-card";
 import type { Metadata } from "next";
@@ -48,7 +48,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const paragraphs = article.content.split("\n\n").filter((p) => p.trim());
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    <article className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
         <Link
@@ -140,7 +140,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       {/* Featured image */}
       <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-lg">
         <Image
-          src={article.image}
+          src={getImageSrc(article.image)}
           alt={article.title}
           fill
           priority

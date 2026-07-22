@@ -1,10 +1,40 @@
 import { cookies } from "next/headers";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { join } from "path";
 
 const SESSION_COOKIE = "cn_admin_session";
 
 export interface SessionPayload {
   email: string;
   loggedInAt: number;
+}
+
+interface StoredCredentials {
+  email: string;
+  password: string;
+  updatedAt: string;
+}
+
+const CREDS_DIR = join(process.cwd(), "data");
+const CREDS_PATH = join(CREDS_DIR, "admin-credentials.json");
+
+function loadCredentials(): StoredCredentials | null {
+  try {
+    if (existsSync(CREDS_PATH)) {
+      const raw = readFileSync(CREDS_PATH, "utf-8");
+      return JSON.parse(raw) as StoredCredentials;
+    }
+  } catch {
+    // fall through
+  }
+  return null;
+}
+
+function saveCredentials(creds: StoredCredentials): void {
+  if (!existsSync(CREDS_DIR)) {
+    mkdirSync(CREDS_DIR, { recursive: true });
+  }
+  writeFileSync(CREDS_PATH, JSON.stringify(creds, null, 2), "utf-8");
 }
 
 function base64url(buf: Uint8Array): string {
@@ -111,8 +141,39 @@ export async function validateCredentials(
   email: string,
   password: string
 ): Promise<boolean> {
+  const stored = loadCredentials();
+  if (stored && stored.email === email && stored.password === password) {
+    return true;
+  }
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminEmail || !adminPassword) return false;
   return email === adminEmail && password === adminPassword;
+}
+
+export async function changeCredentials(
+  currentPassword: string,
+  newPassword: string,
+  email?: string
+): Promise<{ success: boolean; error?: string }> {
+  const stored = loadCredentials();
+  const adminEmail = email || process.env.ADMIN_EMAIL || "";
+  const adminPassword = process.env.ADMIN_PASSWORD || "";
+
+  const currentValid = stored
+    ? stored.password === currentPassword
+    : currentPassword === adminPassword;
+
+  if (!currentValid) {
+    return { success: false, error: "Current password is incorrect" };
+  }
+
+  const targetEmail = stored?.email || adminEmail;
+  saveCredentials({
+    email: targetEmail,
+    password: newPassword,
+    updatedAt: new Date().toISOString(),
+  });
+
+  return { success: true };
 }

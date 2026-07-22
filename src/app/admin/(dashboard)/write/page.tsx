@@ -298,8 +298,8 @@ function WriteArticleForm() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
           <Link
             href="/admin/articles"
             className="rounded-lg p-2 hover:bg-accent transition-colors"
@@ -307,17 +307,17 @@ function WriteArticleForm() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
               {isEditing ? "Edit Article" : "Write New Post"}
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground sm:text-sm">
               {isEditing
                 ? "Edit your article below"
                 : "Create a new article for your readers"}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pl-11 sm:pl-0">
           <Button
             variant="outline"
             onClick={() => handleSave("draft")}

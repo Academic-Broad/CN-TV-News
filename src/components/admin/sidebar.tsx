@@ -11,6 +11,7 @@ import {
   Menu,
   LogOut,
   Loader2,
+  Settings,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Overview", href: "/admin", icon: LayoutDashboard },
   { label: "All Articles", href: "/admin/articles", icon: FileText },
   { label: "Write New Post", href: "/admin/write", icon: PenLine },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {

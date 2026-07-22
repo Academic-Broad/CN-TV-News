@@ -5,7 +5,7 @@ import { Clock, Eye } from "lucide-react";
 import { getAllPublishedArticles, getFeaturedArticles, getArticlesByCategory, getBreakingNews } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { categories } from "@/data/categories";
-import { getRelativeTime, getReadingTime } from "@/lib/utils";
+import { getRelativeTime, getReadingTime, getImageSrc } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/article-card";
 import { BreakingNewsTicker } from "@/components/breaking-news-ticker";
@@ -48,7 +48,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const lifestyleArticles = getArticlesByCategory("lifestyle").slice(0, 4);
 
   return (
-    <div>
+    <div className="min-w-0">
       <BreakingNewsTicker articles={getBreakingNews()} />
 
       {/* Search results */}
@@ -90,7 +90,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 >
                   <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
                     <Image
-                      src={heroArticle.image}
+                      src={getImageSrc(heroArticle.image)}
                       alt={heroArticle.title}
                       fill
                       priority

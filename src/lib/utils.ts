@@ -32,3 +32,10 @@ export function getReadingTime(content: string): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
+export const PLACEHOLDER_IMAGE = "/placeholder-news.svg";
+
+export function getImageSrc(image?: string | null): string {
+  if (!image || image.trim() === "") return PLACEHOLDER_IMAGE;
+  return image;
+}
+

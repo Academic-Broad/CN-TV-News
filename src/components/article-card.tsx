@@ -7,7 +7,7 @@ import { Badge } from "./ui/badge";
 import type { Article } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { getCategoryBySlug } from "@/data/categories";
-import { getRelativeTime, getReadingTime } from "@/lib/utils";
+import { getRelativeTime, getReadingTime, getImageSrc } from "@/lib/utils";
 
 interface ArticleCardProps {
   article: Article;
@@ -25,7 +25,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         <div className="flex gap-4">
           <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden">
             <Image
-              src={article.image}
+              src={getImageSrc(article.image)}
               alt={article.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -57,7 +57,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         <div className="flex gap-6">
           <div className="relative h-48 w-72 flex-shrink-0 overflow-hidden">
             <Image
-              src={article.image}
+              src={getImageSrc(article.image)}
               alt={article.title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -100,7 +100,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
       <div className="overflow-hidden">
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
-            src={article.image}
+            src={getImageSrc(article.image)}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryArticles = getArticlesByCategory(slug);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
         <Link
