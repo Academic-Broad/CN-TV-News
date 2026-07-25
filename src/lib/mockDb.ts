@@ -80,12 +80,13 @@ function adminToArticle(a: AdminArticle): Article {
 }
 
 function generateSlug(title: string): string {
-  return title
+  const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-    .trim();
+    .replace(/^-|-$/g, "");
+  return slug || `article-${Date.now()}`;
 }
 
 // --- Admin functions ---
@@ -126,9 +127,20 @@ export async function createArticle(
   data: Omit<AdminArticle, "id" | "slug" | "createdAt" | "updatedAt" | "viewCount">
 ): Promise<AdminArticle> {
   const now = new Date().toISOString();
+  let slug = generateSlug(data.title);
+
+  const { data: existing } = await supabase
+    .from("articles")
+    .select("slug")
+    .like("slug", `${slug}%`);
+
+  if (existing && existing.length > 0) {
+    slug = `${slug}-${existing.length}`;
+  }
+
   const row = {
     title: data.title,
-    slug: generateSlug(data.title),
+    slug,
     summary: data.summary,
     content: data.content,
     image: data.image,

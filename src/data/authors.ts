@@ -31,7 +31,7 @@ export const authors: Author[] = [
     bio: "Business and Finance editor tracking global markets and economic trends.",
   },
   {
-    id: "emma-watson",
+    id: "emma-thompson",
     name: "Emma Thompson",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
     bio: "Lifestyle and Culture writer covering wellness, travel, and contemporary living.",

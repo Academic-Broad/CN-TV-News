@@ -90,6 +90,10 @@ export default function ArticlesPage() {
       if (!res.ok) throw new Error("Failed");
       setArticles((prev) => prev.filter((a) => a.id !== deleteId));
       toast.success("Article deleted successfully");
+      const remaining = filtered.filter((a) => a.id !== deleteId);
+      if (remaining.length <= (page - 1) * ITEMS_PER_PAGE && page > 1) {
+        setPage((p) => p - 1);
+      }
     } catch {
       toast.error("Failed to delete article");
     } finally {
@@ -235,6 +239,7 @@ export default function ArticlesPage() {
                         <Button
                           variant="ghost"
                           size="icon-xs"
+                          aria-label="Edit article"
                           onClick={() =>
                             router.push(`/admin/write?edit=${article.id}`)
                           }
@@ -244,6 +249,7 @@ export default function ArticlesPage() {
                         <Button
                           variant="ghost"
                           size="icon-xs"
+                          aria-label="Delete article"
                           onClick={() => setDeleteId(article.id)}
                           className="text-destructive hover:text-destructive"
                         >

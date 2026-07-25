@@ -181,7 +181,7 @@ Healthcare economists suggest that widespread adoption of the Mediterranean diet
     image:
       "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=600&fit=crop",
     category: "health",
-    authorId: "emma-watson",
+    authorId: "emma-thompson",
     publishedAt: "2026-07-13T09:30:00Z",
     isBreaking: false,
     isFeatured: false,
@@ -313,7 +313,7 @@ Regulatory scrutiny is expected to be significant. The Federal Trade Commission,
     image:
       "https://images.unsplash.com/photo-1586899028174-e7098604235b?w=1200&h=600&fit=crop",
     category: "entertainment",
-    authorId: "emma-watson",
+    authorId: "emma-thompson",
     publishedAt: "2026-07-11T09:45:00Z",
     isBreaking: false,
     isFeatured: false,
@@ -484,7 +484,7 @@ The research also highlighted important equity considerations. While apps are mo
     image:
       "https://images.unsplash.com/photo-1545389336-cf090694435e?w=1200&h=600&fit=crop",
     category: "health",
-    authorId: "emma-watson",
+    authorId: "emma-thompson",
     publishedAt: "2026-07-08T14:00:00Z",
     isBreaking: false,
     isFeatured: false,
@@ -626,7 +626,7 @@ However, the industry faces challenges, including concerns about quality control
     image:
       "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1200&h=600&fit=crop",
     category: "lifestyle",
-    authorId: "emma-watson",
+    authorId: "emma-thompson",
     publishedAt: "2026-07-06T12:00:00Z",
     isBreaking: false,
     isFeatured: false,
@@ -694,7 +694,7 @@ Countries are responding with more nuanced policies. Several now require proof o
     image:
       "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=600&fit=crop",
     category: "lifestyle",
-    authorId: "emma-watson",
+    authorId: "emma-thompson",
     publishedAt: "2026-07-05T10:00:00Z",
     isBreaking: false,
     isFeatured: false,
@@ -702,39 +702,3 @@ Countries are responding with more nuanced policies. Several now require proof o
     tags: ["digital nomad", "remote work", "travel", "visas"],
   },
 ];
-
-export function getArticleBySlug(slug: string): Article | undefined {
-  return articles.find((a) => a.slug === slug);
-}
-
-export function getArticlesByCategory(category: string): Article[] {
-  return articles.filter((a) => a.category === category);
-}
-
-export function getFeaturedArticles(): Article[] {
-  return articles.filter((a) => a.isFeatured);
-}
-
-export function getBreakingNews(): Article[] {
-  return articles.filter((a) => a.isBreaking);
-}
-
-export function getMostReadArticles(): Article[] {
-  return [...articles].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5);
-}
-
-export function searchArticles(query: string): Article[] {
-  const lowercaseQuery = query.toLowerCase();
-  return articles.filter(
-    (a) =>
-      a.title.toLowerCase().includes(lowercaseQuery) ||
-      a.summary.toLowerCase().includes(lowercaseQuery) ||
-      a.tags.some((tag) => tag.toLowerCase().includes(lowercaseQuery))
-  );
-}
-
-export function getRelatedArticles(articleId: string, category: string): Article[] {
-  return articles
-    .filter((a) => a.id !== articleId && a.category === category)
-    .slice(0, 4);
-}

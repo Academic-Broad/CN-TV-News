@@ -436,7 +436,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Database</dt>
-              <dd className="text-sm font-medium">Mock DB (JSON File)</dd>
+              <dd className="text-sm font-medium">Supabase (PostgreSQL)</dd>
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Last Updated</dt>

@@ -336,3 +336,16 @@ body {
   pointer-events: none;
   height: 0;
 }
+
+.dark .tiptap blockquote {
+  color: #9ca3af;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

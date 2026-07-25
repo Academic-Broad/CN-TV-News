@@ -9,7 +9,7 @@ export function Footer() {
           {/* Logo and description */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-20 w-21 items-center justify-center border-2  bg-[#4169E1] text-white font-bold text-lg">
+              <div className="flex h-20 w-20 items-center justify-center border-2  bg-[#4169E1] text-white font-bold text-lg">
                   CN-TV NEWS
               </div>
               <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">

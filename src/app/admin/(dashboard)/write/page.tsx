@@ -190,7 +190,10 @@ function WriteArticleForm() {
   React.useEffect(() => {
     if (editId) {
       fetch(`/api/articles/${editId}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error("Article not found");
+          return res.json();
+        })
         .then((article) => {
           setForm({
             title: article.title || "",

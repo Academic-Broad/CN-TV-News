@@ -56,7 +56,7 @@ export function Header() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <span className="hidden md:block text-sm text-gray-500 dark:text-gray-400">
+            <span className="hidden md:block text-sm text-gray-500 dark:text-gray-400" suppressHydrationWarning>
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",
