@@ -18,9 +18,10 @@ import { getArticleStats, getAllArticles } from "@/lib/mockDb";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminDashboard() {
-  const stats = getArticleStats();
-  const recentArticles = getAllArticles()
+export default async function AdminDashboard() {
+  const stats = await getArticleStats();
+  const allArticles = await getAllArticles();
+  const recentArticles = allArticles
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

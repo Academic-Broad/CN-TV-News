@@ -20,8 +20,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
   const searchQuery = params.search;
 
-  // If there's a search query, filter articles
-  const allArticles = getAllPublishedArticles();
+  const allArticles = await getAllPublishedArticles();
 
   const filteredArticles = searchQuery
     ? allArticles.filter(
@@ -34,22 +33,24 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       )
     : null;
 
-  const featuredArticles = getFeaturedArticles();
+  const featuredArticles = await getFeaturedArticles();
   const heroArticle = featuredArticles[0] || allArticles[0];
   const secondaryArticles = featuredArticles.slice(1, 5);
   const heroAuthor = authors.find((a) => a.id === heroArticle.authorId);
   const heroCategory = categories.find((c) => c.slug === heroArticle.category);
 
-  // Get articles by category for shelves
-  const techArticles = getArticlesByCategory("tech").slice(0, 4);
-  const scienceArticles = getArticlesByCategory("science").slice(0, 4);
-  const worldArticles = getArticlesByCategory("world").slice(0, 4);
-  const businessArticles = getArticlesByCategory("business").slice(0, 4);
-  const lifestyleArticles = getArticlesByCategory("lifestyle").slice(0, 4);
+  const [techArticles, scienceArticles, worldArticles, businessArticles, lifestyleArticles, breakingNews] = await Promise.all([
+    getArticlesByCategory("tech"),
+    getArticlesByCategory("science"),
+    getArticlesByCategory("world"),
+    getArticlesByCategory("business"),
+    getArticlesByCategory("lifestyle"),
+    getBreakingNews(),
+  ]);
 
   return (
     <div className="min-w-0">
-      <BreakingNewsTicker articles={getBreakingNews()} />
+      <BreakingNewsTicker articles={breakingNews} />
 
       {/* Search results */}
       {filteredArticles && (
@@ -177,31 +178,31 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <CategoryShelf
               title="Technology"
               categorySlug="tech"
-              articles={techArticles}
+              articles={techArticles.slice(0, 4)}
             />
             <div className="border-t border-gray-200 dark:border-gray-700" />
             <CategoryShelf
               title="Science"
               categorySlug="science"
-              articles={scienceArticles}
+              articles={scienceArticles.slice(0, 4)}
             />
             <div className="border-t border-gray-200 dark:border-gray-700" />
             <CategoryShelf
               title="World News"
               categorySlug="world"
-              articles={worldArticles}
+              articles={worldArticles.slice(0, 4)}
             />
             <div className="border-t border-gray-200 dark:border-gray-700" />
             <CategoryShelf
               title="Business"
               categorySlug="business"
-              articles={businessArticles}
+              articles={businessArticles.slice(0, 4)}
             />
             <div className="border-t border-gray-200 dark:border-gray-700" />
             <CategoryShelf
               title="Lifestyle"
               categorySlug="lifestyle"
-              articles={lifestyleArticles}
+              articles={lifestyleArticles.slice(0, 4)}
             />
           </div>
         </>

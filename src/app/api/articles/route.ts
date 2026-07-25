@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import { getAllArticles, createArticle } from "@/lib/mockDb";
 
 export async function GET() {
-  const articles = getAllArticles();
-  return NextResponse.json(articles);
+  try {
+    const articles = await getAllArticles();
+    return NextResponse.json(articles);
+  } catch {
+    return NextResponse.json(
+      { error: "Failed to fetch articles" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -18,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const article = createArticle({
+    const article = await createArticle({
       title,
       summary: summary || "",
       content: content || "",

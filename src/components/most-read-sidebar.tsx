@@ -3,8 +3,8 @@ import { getMostReadArticles } from "@/lib/mockDb";
 import { getCategoryBySlug } from "@/data/categories";
 import { Badge } from "./ui/badge";
 
-export function MostReadSidebar() {
-  const mostRead = getMostReadArticles();
+export async function MostReadSidebar() {
+  const mostRead = await getMostReadArticles();
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">

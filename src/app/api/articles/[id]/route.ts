@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const article = getArticleById(id);
+  const article = await getArticleById(id);
   if (!article) {
     return NextResponse.json({ error: "Article not found" }, { status: 404 });
   }
@@ -20,7 +20,7 @@ export async function PUT(
   const { id } = await params;
   try {
     const body = await request.json();
-    const updated = updateArticle(id, body);
+    const updated = await updateArticle(id, body);
     if (!updated) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
@@ -35,7 +35,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const deleted = deleteArticle(id);
+  const deleted = await deleteArticle(id);
   if (!deleted) {
     return NextResponse.json({ error: "Article not found" }, { status: 404 });
   }

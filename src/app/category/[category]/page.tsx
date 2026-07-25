@@ -35,7 +35,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const categoryArticles = getArticlesByCategory(slug);
+  const categoryArticles = await getArticlesByCategory(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">

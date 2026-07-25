@@ -16,14 +16,15 @@ interface ArticlePageProps {
 }
 
 export async function generateStaticParams() {
-  return getAllPublishedArticles().map((article) => ({
+  const articles = await getAllPublishedArticles();
+  return articles.map((article) => ({
     slug: article.slug,
   }));
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) return { title: "Article Not Found" };
 
   return {
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();
@@ -42,7 +43,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const author = authors.find((a) => a.id === article.authorId);
   const category = getCategoryBySlug(article.category);
-  const relatedArticles = getRelatedArticles(article.id, article.category);
+  const relatedArticles = await getRelatedArticles(article.id, article.category);
   const readingTime = getReadingTime(article.content);
 
   return (

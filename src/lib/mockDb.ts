@@ -1,6 +1,5 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
-import { join } from "path";
-import { articles as seedArticles, type Article } from "@/data/articles";
+import { supabase } from "@/lib/supabase";
+import type { Article } from "@/data/articles";
 export type { Article } from "@/data/articles";
 
 export interface AdminArticle {
@@ -22,58 +21,44 @@ export interface AdminArticle {
   isFeatured: boolean;
 }
 
-const DB_DIR = join(process.cwd(), "data");
-const DB_PATH = join(DB_DIR, "articles-db.json");
+interface DbRow {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  content: string;
+  image: string;
+  category: string;
+  author_id: string;
+  published_at: string;
+  status: "draft" | "published";
+  view_count: number;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+  is_breaking: boolean;
+  is_featured: boolean;
+}
 
-function articleToAdmin(a: Article): AdminArticle {
+function rowToAdmin(row: DbRow): AdminArticle {
   return {
-    id: a.id,
-    slug: a.slug,
-    title: a.title,
-    summary: a.summary,
-    content: a.content,
-    image: a.image,
-    category: a.category,
-    authorId: a.authorId,
-    publishedAt: a.publishedAt,
-    status: "published",
-    viewCount: a.viewCount,
-    tags: a.tags,
-    createdAt: a.publishedAt,
-    updatedAt: a.publishedAt,
-    isBreaking: a.isBreaking,
-    isFeatured: a.isFeatured,
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    summary: row.summary,
+    content: row.content,
+    image: row.image,
+    category: row.category,
+    authorId: row.author_id,
+    publishedAt: row.published_at,
+    status: row.status,
+    viewCount: row.view_count,
+    tags: row.tags ?? [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    isBreaking: row.is_breaking,
+    isFeatured: row.is_featured,
   };
-}
-
-function loadDb(): AdminArticle[] {
-  try {
-    if (existsSync(DB_PATH)) {
-      const raw = readFileSync(DB_PATH, "utf-8");
-      return JSON.parse(raw) as AdminArticle[];
-    }
-  } catch {
-    // fall through to seed
-  }
-  const seeded = seedArticles.map(articleToAdmin);
-  saveDb(seeded);
-  return seeded;
-}
-
-function saveDb(data: AdminArticle[]): void {
-  if (!existsSync(DB_DIR)) {
-    mkdirSync(DB_DIR, { recursive: true });
-  }
-  writeFileSync(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
-}
-
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
 }
 
 function adminToArticle(a: AdminArticle): Article {
@@ -94,87 +79,149 @@ function adminToArticle(a: AdminArticle): Article {
   };
 }
 
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
+
 // --- Admin functions ---
 
-export function getAllArticles(): AdminArticle[] {
-  return loadDb();
+export async function getAllArticles(): Promise<AdminArticle[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin);
 }
 
-export function getArticleById(id: string): AdminArticle | undefined {
-  return loadDb().find((a) => a.id === id);
+export async function getArticleById(id: string): Promise<AdminArticle | undefined> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) return undefined;
+  return rowToAdmin(data as DbRow);
 }
 
-export function getArticleBySlugAdmin(slug: string): AdminArticle | undefined {
-  return loadDb().find((a) => a.slug === slug);
+export async function getArticleBySlugAdmin(slug: string): Promise<AdminArticle | undefined> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) return undefined;
+  return rowToAdmin(data as DbRow);
 }
 
-export function createArticle(
+export async function createArticle(
   data: Omit<AdminArticle, "id" | "slug" | "createdAt" | "updatedAt" | "viewCount">
-): AdminArticle {
-  const articles = loadDb();
-  const nextId = articles.length > 0
-    ? Math.max(...articles.map((a) => Number(a.id))) + 1
-    : 1;
+): Promise<AdminArticle> {
   const now = new Date().toISOString();
-  const article: AdminArticle = {
-    ...data,
-    id: String(nextId),
+  const row = {
+    title: data.title,
     slug: generateSlug(data.title),
-    viewCount: 0,
-    createdAt: now,
-    updatedAt: now,
+    summary: data.summary,
+    content: data.content,
+    image: data.image,
+    category: data.category,
+    author_id: data.authorId,
+    published_at: data.publishedAt,
+    status: data.status,
+    tags: data.tags,
+    view_count: 0,
+    is_breaking: data.isBreaking,
+    is_featured: data.isFeatured,
+    created_at: now,
+    updated_at: now,
   };
-  articles.unshift(article);
-  saveDb(articles);
-  return article;
+
+  const { data: inserted, error } = await supabase
+    .from("articles")
+    .insert(row)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return rowToAdmin(inserted as DbRow);
 }
 
-export function updateArticle(
+export async function updateArticle(
   id: string,
   data: Partial<Omit<AdminArticle, "id" | "createdAt">>
-): AdminArticle | null {
-  const articles = loadDb();
-  const index = articles.findIndex((a) => a.id === id);
-  if (index === -1) return null;
-  const updated = {
-    ...articles[index],
-    ...data,
-    updatedAt: new Date().toISOString(),
-  };
-  if (data.title && data.title !== articles[index].title) {
-    updated.slug = generateSlug(data.title);
+): Promise<AdminArticle | null> {
+  const update: Record<string, unknown> = {};
+
+  if (data.title !== undefined) {
+    update.title = data.title;
+    update.slug = generateSlug(data.title);
   }
-  articles[index] = updated;
-  saveDb(articles);
-  return updated;
+  if (data.summary !== undefined) update.summary = data.summary;
+  if (data.content !== undefined) update.content = data.content;
+  if (data.image !== undefined) update.image = data.image;
+  if (data.category !== undefined) update.category = data.category;
+  if (data.status !== undefined) update.status = data.status;
+  if (data.tags !== undefined) update.tags = data.tags;
+  if (data.isBreaking !== undefined) update.is_breaking = data.isBreaking;
+  if (data.isFeatured !== undefined) update.is_featured = data.isFeatured;
+  if (data.publishedAt !== undefined) update.published_at = data.publishedAt;
+  if (data.authorId !== undefined) update.author_id = data.authorId;
+  if (data.viewCount !== undefined) update.view_count = data.viewCount;
+
+  const { data: updated, error } = await supabase
+    .from("articles")
+    .update(update)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error || !updated) return null;
+  return rowToAdmin(updated as DbRow);
 }
 
-export function deleteArticle(id: string): boolean {
-  const articles = loadDb();
-  const index = articles.findIndex((a) => a.id === id);
-  if (index === -1) return false;
-  articles.splice(index, 1);
-  saveDb(articles);
-  return true;
+export async function deleteArticle(id: string): Promise<boolean> {
+  const { error } = await supabase
+    .from("articles")
+    .delete()
+    .eq("id", id);
+
+  return !error;
 }
 
-export function searchArticlesAdmin(query: string): AdminArticle[] {
-  const q = query.toLowerCase();
-  return loadDb().filter(
-    (a) =>
-      a.title.toLowerCase().includes(q) ||
-      a.summary.toLowerCase().includes(q) ||
-      a.tags.some((t) => t.toLowerCase().includes(q))
-  );
+export async function searchArticlesAdmin(query: string): Promise<AdminArticle[]> {
+  const q = `%${query}%`;
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .or(`title.ilike.${q},summary.ilike.${q}`)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin);
 }
 
-export function getArticleStats() {
-  const articles = loadDb();
-  const published = articles.filter((a) => a.status === "published");
-  const drafts = articles.filter((a) => a.status === "draft");
-  const totalViews = articles.reduce((sum, a) => sum + a.viewCount, 0);
+export async function getArticleStats() {
+  const { data: all, error } = await supabase
+    .from("articles")
+    .select("status, view_count");
+
+  if (error) throw error;
+
+  const rows = all as { status: string; view_count: number }[];
+  const published = rows.filter((r) => r.status === "published");
+  const drafts = rows.filter((r) => r.status === "draft");
+  const totalViews = rows.reduce((sum, r) => sum + (r.view_count ?? 0), 0);
+
   return {
-    total: articles.length,
+    total: rows.length,
     published: published.length,
     drafts: drafts.length,
     totalViews,
@@ -183,52 +230,103 @@ export function getArticleStats() {
 
 // --- Public functions (returns only published articles as Article type) ---
 
-function getPublishedArticles(): Article[] {
-  return loadDb()
-    .filter((a) => a.status === "published")
-    .map(adminToArticle);
+export async function getAllPublishedArticles(): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("status", "published")
+    .order("published_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function getAllPublishedArticles(): Article[] {
-  return getPublishedArticles();
+export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .single();
+
+  if (error || !data) return undefined;
+  return adminToArticle(rowToAdmin(data as DbRow));
 }
 
-export function getArticleBySlug(slug: string): Article | undefined {
-  const a = loadDb().find((a) => a.slug === slug);
-  if (!a || a.status !== "published") return undefined;
-  return adminToArticle(a);
+export async function getArticlesByCategory(category: string): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("category", category)
+    .eq("status", "published")
+    .order("published_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function getArticlesByCategory(category: string): Article[] {
-  return getPublishedArticles().filter((a) => a.category === category);
+export async function getFeaturedArticles(): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("status", "published")
+    .eq("is_featured", true)
+    .order("published_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function getFeaturedArticles(): Article[] {
-  return getPublishedArticles().filter((a) => a.isFeatured);
+export async function getBreakingNews(): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("status", "published")
+    .eq("is_breaking", true)
+    .order("published_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function getBreakingNews(): Article[] {
-  return getPublishedArticles().filter((a) => a.isBreaking);
+export async function getMostReadArticles(): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("status", "published")
+    .order("view_count", { ascending: false })
+    .limit(5);
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function getMostReadArticles(): Article[] {
-  return [...getPublishedArticles()]
-    .sort((a, b) => b.viewCount - a.viewCount)
-    .slice(0, 5);
+export async function searchArticles(query: string): Promise<Article[]> {
+  const q = `%${query}%`;
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("status", "published")
+    .or(`title.ilike.${q},summary.ilike.${q}`)
+    .order("published_at", { ascending: false });
+
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
 
-export function searchArticles(query: string): Article[] {
-  const q = query.toLowerCase();
-  return getPublishedArticles().filter(
-    (a) =>
-      a.title.toLowerCase().includes(q) ||
-      a.summary.toLowerCase().includes(q) ||
-      a.tags.some((tag) => tag.toLowerCase().includes(q))
-  );
-}
+export async function getRelatedArticles(
+  articleId: string,
+  category: string
+): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("category", category)
+    .eq("status", "published")
+    .neq("id", articleId)
+    .order("published_at", { ascending: false })
+    .limit(4);
 
-export function getRelatedArticles(articleId: string, category: string): Article[] {
-  return getPublishedArticles()
-    .filter((a) => a.id !== articleId && a.category === category)
-    .slice(0, 4);
+  if (error) throw error;
+  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
 }
