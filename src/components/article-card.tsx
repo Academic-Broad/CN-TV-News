@@ -7,7 +7,7 @@ import { Badge } from "./ui/badge";
 import type { Article } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { getCategoryBySlug } from "@/data/categories";
-import { getRelativeTime, getReadingTime, getImageSrc, stripHtml } from "@/lib/utils";
+import { getReadingTime, getImageSrc, stripHtml, formatDateTime } from "@/lib/utils";
 
 interface ArticleCardProps {
   article: Article;
@@ -44,7 +44,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
             </h3>
             <div className="mt-1 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
               <Clock className="h-3 w-3" />
-              {getRelativeTime(article.publishedAt)}
+              {formatDateTime(article.publishedAt)}
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               {author && <span>{author.name}</span>}
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {getRelativeTime(article.publishedAt)}
+                {formatDateTime(article.publishedAt)}
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="h-3 w-3" />
@@ -127,7 +127,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
           {author && <span>{author.name}</span>}
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
-            {getRelativeTime(article.publishedAt)}
+            {formatDateTime(article.publishedAt)}
           </span>
         </div>
       </div>

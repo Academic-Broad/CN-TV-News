@@ -5,7 +5,7 @@ import { Clock, Eye } from "lucide-react";
 import { getAllPublishedArticles, getFeaturedArticles, getArticlesByCategory, getBreakingNews } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { categories } from "@/data/categories";
-import { getRelativeTime, getReadingTime, getImageSrc, stripHtml } from "@/lib/utils";
+import { getReadingTime, getImageSrc, stripHtml, formatDateTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/article-card";
 import { BreakingNewsTicker } from "@/components/breaking-news-ticker";
@@ -118,7 +118,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                         {heroAuthor && <span>{heroAuthor.name}</span>}
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
-                          {getRelativeTime(heroArticle.publishedAt)}
+                          {formatDateTime(heroArticle.publishedAt)}
                         </span>
                         <span className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
