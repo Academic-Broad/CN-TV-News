@@ -16,10 +16,14 @@ interface ArticlePageProps {
 }
 
 export async function generateStaticParams() {
-  const articles = await getAllPublishedArticles();
-  return articles.map((article) => ({
-    slug: article.slug,
-  }));
+  try {
+    const articles = await getAllPublishedArticles();
+    return articles.map((article) => ({
+      slug: article.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {

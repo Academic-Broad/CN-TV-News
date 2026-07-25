@@ -243,102 +243,134 @@ export async function getArticleStats() {
 // --- Public functions (returns only published articles as Article type) ---
 
 export async function getAllPublishedArticles(): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("status", "published")
-    .order("published_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("status", "published")
+      .order("published_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .single();
 
-  if (error || !data) return undefined;
-  return adminToArticle(rowToAdmin(data as DbRow));
+    if (error || !data) return undefined;
+    return adminToArticle(rowToAdmin(data as DbRow));
+  } catch {
+    return undefined;
+  }
 }
 
 export async function getArticlesByCategory(category: string): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("category", category)
-    .eq("status", "published")
-    .order("published_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("category", category)
+      .eq("status", "published")
+      .order("published_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function getFeaturedArticles(): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("status", "published")
-    .eq("is_featured", true)
-    .order("published_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("status", "published")
+      .eq("is_featured", true)
+      .order("published_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function getBreakingNews(): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("status", "published")
-    .eq("is_breaking", true)
-    .order("published_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("status", "published")
+      .eq("is_breaking", true)
+      .order("published_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function getMostReadArticles(): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("status", "published")
-    .order("view_count", { ascending: false })
-    .limit(5);
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("status", "published")
+      .order("view_count", { ascending: false })
+      .limit(5);
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function searchArticles(query: string): Promise<Article[]> {
-  const q = `%${query}%`;
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("status", "published")
-    .or(`title.ilike.${q},summary.ilike.${q}`)
-    .order("published_at", { ascending: false });
+  try {
+    const q = `%${query}%`;
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("status", "published")
+      .or(`title.ilike.${q},summary.ilike.${q}`)
+      .order("published_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
 
 export async function getRelatedArticles(
   articleId: string,
   category: string
 ): Promise<Article[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("category", category)
-    .eq("status", "published")
-    .neq("id", articleId)
-    .order("published_at", { ascending: false })
-    .limit(4);
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("category", category)
+      .eq("status", "published")
+      .neq("id", articleId)
+      .order("published_at", { ascending: false })
+      .limit(4);
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+    if (error) throw error;
+    return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
+  } catch {
+    return [];
+  }
 }
