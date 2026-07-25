@@ -35,7 +35,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
           </div>
           <div className="flex-1 min-w-0">
             {category && (
-              <Badge className="mb-1 text-[10px]" style={{ backgroundColor: category.color }}>
+              <Badge className="mb-1 text-[10px]" style={{ backgroundColor: category.color, color: "white" }}>
                 {category.name}
               </Badge>
             )}
@@ -68,7 +68,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
           </div>
           <div className="flex-1 min-w-0 py-2">
             {category && (
-              <Badge className="mb-2 text-xs" style={{ backgroundColor: category.color }}>
+              <Badge className="mb-2 text-xs" style={{ backgroundColor: category.color, color: "white" }}>
                 {category.name}
               </Badge>
             )}
@@ -113,7 +113,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
       </div>
       <div className="mt-3">
         {category && (
-          <Badge className="mb-2 text-xs" style={{ backgroundColor: category.color }}>
+          <Badge className="mb-2 text-xs" style={{ backgroundColor: category.color, color: "white" }}>
             {category.name}
           </Badge>
         )}

@@ -20,14 +20,14 @@ export async function MostReadSidebar() {
               href={`/article/${article.slug}`}
               className="group flex gap-4"
             >
-              <span className="flex-shrink-0 text-3xl font-bold text-[#D4AF37] opacity-40 dark:opacity-60">
+              <span className="flex-shrink-0 text-3xl font-bold text-[#D4AF37] opacity-60 dark:opacity-70">
                 {index + 1}
               </span>
               <div className="flex-1 min-w-0">
                 {category && (
                   <Badge
                     className="mb-1 text-[10px]"
-                    style={{ backgroundColor: category.color }}
+                    style={{ backgroundColor: category.color, color: "white" }}
                   >
                     {category.name}
                   </Badge>

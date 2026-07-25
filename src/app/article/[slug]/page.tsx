@@ -75,7 +75,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       {/* Article header */}
       <header className="mb-8">
         {category && (
-          <Badge className="mb-4 text-xs" style={{ backgroundColor: category.color }}>
+          <Badge className="mb-4 text-xs" style={{ backgroundColor: category.color, color: "white" }}>
             {category.name}
           </Badge>
         )}

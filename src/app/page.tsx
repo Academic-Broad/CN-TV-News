@@ -104,7 +104,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                       {heroCategory && (
                         <Badge
                           className="mb-3 text-xs"
-                          style={{ backgroundColor: heroCategory.color }}
+                          style={{ backgroundColor: heroCategory.color, color: "white" }}
                         >
                           {heroCategory.name}
                         </Badge>
