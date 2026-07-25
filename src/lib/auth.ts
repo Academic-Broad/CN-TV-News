@@ -177,3 +177,34 @@ export async function changeCredentials(
 
   return { success: true };
 }
+
+export async function changeAdminEmail(
+  currentPassword: string,
+  newEmail: string,
+  currentEmail: string
+): Promise<{ success: boolean; error?: string }> {
+  const stored = loadCredentials();
+  const adminPassword = process.env.ADMIN_PASSWORD || "";
+
+  const currentValid = stored
+    ? stored.password === currentPassword
+    : currentPassword === adminPassword;
+
+  if (!currentValid) {
+    return { success: false, error: "Current password is incorrect" };
+  }
+
+  const existingCreds = stored || {
+    email: process.env.ADMIN_EMAIL || currentEmail,
+    password: adminPassword,
+    updatedAt: new Date().toISOString(),
+  };
+
+  saveCredentials({
+    ...existingCreds,
+    email: newEmail,
+    updatedAt: new Date().toISOString(),
+  });
+
+  return { success: true };
+}

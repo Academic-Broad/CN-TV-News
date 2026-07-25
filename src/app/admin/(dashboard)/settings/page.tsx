@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Eye, EyeOff, Lock, CheckCircle, AlertCircle, Settings, User, Bell, Globe } from "lucide-react";
+import { Eye, EyeOff, Lock, CheckCircle, AlertCircle, Settings, User, Bell, Globe, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,191 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+function UpdateEmailForm() {
+  const [currentEmail, setCurrentEmail] = React.useState("");
+  const [newEmail, setNewEmail] = React.useState("");
+  const [confirmEmail, setConfirmEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [fetchingEmail, setFetchingEmail] = React.useState(true);
+  const [errors, setErrors] = React.useState<{ newEmail?: string; confirmEmail?: string; password?: string }>({});
+
+  React.useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.email) setCurrentEmail(data.email);
+      })
+      .catch(() => {})
+      .finally(() => setFetchingEmail(false));
+  }, []);
+
+  const validate = (): boolean => {
+    const newErrors: typeof errors = {};
+
+    if (!newEmail) {
+      newErrors.newEmail = "New email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      newErrors.newEmail = "Please enter a valid email address";
+    } else if (newEmail === currentEmail) {
+      newErrors.newEmail = "New email must be different from current email";
+    }
+
+    if (!confirmEmail) {
+      newErrors.confirmEmail = "Please confirm your new email";
+    } else if (newEmail !== confirmEmail) {
+      newErrors.confirmEmail = "Emails do not match";
+    }
+
+    if (!password) {
+      newErrors.password = "Current password is required to confirm this change";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/change-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: password, newEmail }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update email");
+      }
+
+      setCurrentEmail(newEmail);
+      setNewEmail("");
+      setConfirmEmail("");
+      setPassword("");
+      setErrors({});
+      toast.success("Admin email updated successfully!");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to update email");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Mail className="h-5 w-5" />
+          Update Admin Email Address
+        </CardTitle>
+        <CardDescription>
+          Change the email address used to log in to this admin account.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="current-email">Current Email Address</Label>
+            <Input
+              id="current-email"
+              type="email"
+              value={fetchingEmail ? "Loading..." : currentEmail}
+              disabled
+              className="bg-muted"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="new-email">New Email Address</Label>
+            <Input
+              id="new-email"
+              type="email"
+              value={newEmail}
+              onChange={(e) => {
+                setNewEmail(e.target.value);
+                if (errors.newEmail) setErrors((prev) => ({ ...prev, newEmail: undefined }));
+              }}
+              placeholder="Enter new email address"
+            />
+            {errors.newEmail && (
+              <p className="flex items-center gap-1 text-xs text-destructive">
+                <AlertCircle className="h-3 w-3" />
+                {errors.newEmail}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirm-email">Confirm New Email Address</Label>
+            <Input
+              id="confirm-email"
+              type="email"
+              value={confirmEmail}
+              onChange={(e) => {
+                setConfirmEmail(e.target.value);
+                if (errors.confirmEmail) setErrors((prev) => ({ ...prev, confirmEmail: undefined }));
+              }}
+              placeholder="Confirm new email address"
+            />
+            {errors.confirmEmail && (
+              <p className="flex items-center gap-1 text-xs text-destructive">
+                <AlertCircle className="h-3 w-3" />
+                {errors.confirmEmail}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email-password">Current Password</Label>
+            <div className="relative">
+              <Input
+                id="email-password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+                }}
+                placeholder="Enter current password to confirm"
+                className="pr-10"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="flex items-center gap-1 text-xs text-destructive">
+                <AlertCircle className="h-3 w-3" />
+                {errors.password}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="bg-[#4169E1] hover:bg-[#2E5090] text-white"
+          >
+            {loading ? "Updating Email..." : "Update Email"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
 
 function ChangePasswordForm() {
   const [currentPassword, setCurrentPassword] = React.useState("");
@@ -227,6 +412,8 @@ export default function SettingsPage() {
           </Card>
         ))}
       </div>
+
+      <UpdateEmailForm />
 
       <ChangePasswordForm />
 

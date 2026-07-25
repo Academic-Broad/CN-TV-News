@@ -232,3 +232,121 @@ export function getRelatedArticles(articleId: string, category: string): Article
     .filter((a) => a.id !== articleId && a.category === category)
     .slice(0, 4);
 }
+
+// --- Visitor Tracking ---
+
+interface VisitorEntry {
+  ipHash: string;
+  path: string;
+  timestamp: string;
+  date: string;
+}
+
+interface DailyCount {
+  date: string;
+  visitors: number;
+  pageviews: number;
+}
+
+interface VisitorsDb {
+  totalUniqueVisitors: number;
+  totalPageviews: number;
+  daily: DailyCount[];
+  recent: VisitorEntry[];
+  knownIps: string[];
+}
+
+const VISITORS_PATH = join(DB_DIR, "visitors-db.json");
+
+function loadVisitorsDb(): VisitorsDb {
+  try {
+    if (existsSync(VISITORS_PATH)) {
+      const raw = readFileSync(VISITORS_PATH, "utf-8");
+      return JSON.parse(raw) as VisitorsDb;
+    }
+  } catch {
+    // fall through
+  }
+  return {
+    totalUniqueVisitors: 0,
+    totalPageviews: 0,
+    daily: [],
+    recent: [],
+    knownIps: [],
+  };
+}
+
+function saveVisitorsDb(data: VisitorsDb): void {
+  if (!existsSync(DB_DIR)) {
+    mkdirSync(DB_DIR, { recursive: true });
+  }
+  writeFileSync(VISITORS_PATH, JSON.stringify(data, null, 2), "utf-8");
+}
+
+export function trackVisitor(ipHash: string, path: string): void {
+  const db = loadVisitorsDb();
+  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date().toISOString();
+  const isNewVisitor = !db.knownIps.includes(ipHash);
+
+  if (isNewVisitor) {
+    db.knownIps.push(ipHash);
+    db.totalUniqueVisitors++;
+  }
+
+  db.totalPageviews++;
+
+  let dayEntry = db.daily.find((d) => d.date === today);
+  if (!dayEntry) {
+    dayEntry = { date: today, visitors: 0, pageviews: 0 };
+    db.daily.push(dayEntry);
+  }
+  if (isNewVisitor) dayEntry.visitors++;
+  dayEntry.pageviews++;
+
+  // Keep only last 30 days
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 30);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  db.daily = db.daily.filter((d) => d.date >= cutoffStr);
+
+  // Add to recent (keep last 100)
+  db.recent.unshift({ ipHash: ipHash.slice(0, 8), path, timestamp: now, date: today });
+  if (db.recent.length > 100) db.recent = db.recent.slice(0, 100);
+
+  saveVisitorsDb(db);
+}
+
+export interface VisitorStats {
+  totalUniqueVisitors: number;
+  totalPageviews: number;
+  todayVisitors: number;
+  todayPageviews: number;
+  yesterdayVisitors: number;
+  yesterdayPageviews: number;
+  daily: DailyCount[];
+  recent: VisitorEntry[];
+}
+
+export function getVisitorStats(): VisitorStats {
+  const db = loadVisitorsDb();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+
+  const todayEntry = db.daily.find((d) => d.date === today);
+  const yesterdayEntry = db.daily.find((d) => d.date === yesterdayStr);
+
+  return {
+    totalUniqueVisitors: db.totalUniqueVisitors,
+    totalPageviews: db.totalPageviews,
+    todayVisitors: todayEntry?.visitors || 0,
+    todayPageviews: todayEntry?.pageviews || 0,
+    yesterdayVisitors: yesterdayEntry?.visitors || 0,
+    yesterdayPageviews: yesterdayEntry?.pageviews || 0,
+    daily: db.daily.slice(-14),
+    recent: db.recent.slice(0, 20),
+  };
+}

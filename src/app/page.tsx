@@ -154,7 +154,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
               {/* Latest news */}
               <div className="lg:col-span-8">
-                <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white border-b-2 border-[#4169E1] pb-2">
+                <h2 className="mb-6 text-2xl font-bold text-[#D4AF37] border-b-2 border-[#4169E1] pb-2">
                   Latest News
                 </h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

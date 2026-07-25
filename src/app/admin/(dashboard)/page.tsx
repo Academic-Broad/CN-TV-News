@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { getArticleStats, getAllArticles } from "@/lib/mockDb";
+import { VisitorStats } from "@/components/admin/visitor-stats";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,8 @@ export default function AdminDashboard() {
           </Card>
         ))}
       </div>
+
+      <VisitorStats />
 
       <Card>
         <CardHeader>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4169E1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E5090;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background rounded rectangle -->
+  <rect x="2" y="2" width="60" height="60" rx="12" ry="12" fill="url(#bg)" stroke="#D4AF37" stroke-width="2.5"/>
+  <!-- CN text -->
+  <text x="32" y="34" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle" letter-spacing="1">CN</text>
+  <!-- TV text -->
+  <text x="32" y="52" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="13" fill="#D4AF37" text-anchor="middle" dominant-baseline="middle" letter-spacing="2">TV</text>
+  <!-- Golden accent line -->
+  <line x1="16" y1="42" x2="48" y2="42" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
