@@ -36,8 +36,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const featuredArticles = await getFeaturedArticles();
   const heroArticle = featuredArticles[0] || allArticles[0];
   const secondaryArticles = featuredArticles.slice(1, 5);
-  const heroAuthor = authors.find((a) => a.id === heroArticle.authorId);
-  const heroCategory = categories.find((c) => c.slug === heroArticle.category);
+  const heroAuthor = heroArticle ? authors.find((a) => a.id === heroArticle.authorId) : null;
+  const heroCategory = heroArticle ? categories.find((c) => c.slug === heroArticle.category) : null;
 
   const [techArticles, scienceArticles, worldArticles, businessArticles, lifestyleArticles, breakingNews] = await Promise.all([
     getArticlesByCategory("tech"),
@@ -80,7 +80,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       {/* Main homepage content */}
       {!filteredArticles && (
         <>
-          {/* Hero Section */}
+          {!heroArticle ? (
+            <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Welcome to CN TV News
+              </h1>
+              <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                No articles published yet. Check back soon!
+              </p>
+            </div>
+          ) : (
+          <>          {/* Hero Section */}
           <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
               {/* Hero story */}
@@ -205,6 +215,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               articles={lifestyleArticles.slice(0, 4)}
             />
           </div>
+          </>
+          )}
         </>
       )}
     </div>

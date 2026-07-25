@@ -92,35 +92,53 @@ function generateSlug(title: string): string {
 // --- Admin functions ---
 
 export async function getAllArticles(): Promise<AdminArticle[]> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .order("created_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin);
+    if (error) {
+      console.error("Error fetching all articles:", error.message);
+      return [];
+    }
+    return (data as DbRow[]).map(rowToAdmin);
+  } catch (err) {
+    console.error("Failed to fetch all articles:", err);
+    return [];
+  }
 }
 
 export async function getArticleById(id: string): Promise<AdminArticle | undefined> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("id", id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-  if (error || !data) return undefined;
-  return rowToAdmin(data as DbRow);
+    if (error || !data) return undefined;
+    return rowToAdmin(data as DbRow);
+  } catch (err) {
+    console.error("Failed to fetch article by id:", err);
+    return undefined;
+  }
 }
 
 export async function getArticleBySlugAdmin(slug: string): Promise<AdminArticle | undefined> {
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("slug", slug)
+      .single();
 
-  if (error || !data) return undefined;
-  return rowToAdmin(data as DbRow);
+    if (error || !data) return undefined;
+    return rowToAdmin(data as DbRow);
+  } catch (err) {
+    console.error("Failed to fetch article by slug:", err);
+    return undefined;
+  }
 }
 
 export async function createArticle(
@@ -129,13 +147,17 @@ export async function createArticle(
   const now = new Date().toISOString();
   let slug = generateSlug(data.title);
 
-  const { data: existing } = await supabase
-    .from("articles")
-    .select("slug")
-    .like("slug", `${slug}%`);
+  try {
+    const { data: existing } = await supabase
+      .from("articles")
+      .select("slug")
+      .like("slug", `${slug}%`);
 
-  if (existing && existing.length > 0) {
-    slug = `${slug}-${existing.length}`;
+    if (existing && existing.length > 0) {
+      slug = `${slug}-${existing.length}`;
+    }
+  } catch {
+    // If slug check fails, proceed with generated slug
   }
 
   const row = {
@@ -156,14 +178,22 @@ export async function createArticle(
     updated_at: now,
   };
 
-  const { data: inserted, error } = await supabase
-    .from("articles")
-    .insert(row)
-    .select()
-    .single();
+  try {
+    const { data: inserted, error } = await supabase
+      .from("articles")
+      .insert(row)
+      .select()
+      .single();
 
-  if (error) throw error;
-  return rowToAdmin(inserted as DbRow);
+    if (error) {
+      console.error("Error creating article:", error.message);
+      throw error;
+    }
+    return rowToAdmin(inserted as DbRow);
+  } catch (err) {
+    console.error("Failed to create article:", err);
+    throw err;
+  }
 }
 
 export async function updateArticle(
@@ -188,56 +218,86 @@ export async function updateArticle(
   if (data.authorId !== undefined) update.author_id = data.authorId;
   if (data.viewCount !== undefined) update.view_count = data.viewCount;
 
-  const { data: updated, error } = await supabase
-    .from("articles")
-    .update(update)
-    .eq("id", id)
-    .select()
-    .single();
+  try {
+    const { data: updated, error } = await supabase
+      .from("articles")
+      .update(update)
+      .eq("id", id)
+      .select()
+      .single();
 
-  if (error || !updated) return null;
-  return rowToAdmin(updated as DbRow);
+    if (error || !updated) return null;
+    return rowToAdmin(updated as DbRow);
+  } catch (err) {
+    console.error("Failed to update article:", err);
+    return null;
+  }
 }
 
 export async function deleteArticle(id: string): Promise<boolean> {
-  const { error } = await supabase
-    .from("articles")
-    .delete()
-    .eq("id", id);
+  try {
+    const { error } = await supabase
+      .from("articles")
+      .delete()
+      .eq("id", id);
 
-  return !error;
+    if (error) {
+      console.error("Error deleting article:", error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to delete article:", err);
+    return false;
+  }
 }
 
 export async function searchArticlesAdmin(query: string): Promise<AdminArticle[]> {
-  const q = `%${query}%`;
-  const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .or(`title.ilike.${q},summary.ilike.${q}`)
-    .order("created_at", { ascending: false });
+  try {
+    const q = `%${query}%`;
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .or(`title.ilike.${q},summary.ilike.${q}`)
+      .order("created_at", { ascending: false });
 
-  if (error) throw error;
-  return (data as DbRow[]).map(rowToAdmin);
+    if (error) {
+      console.error("Error searching articles:", error.message);
+      return [];
+    }
+    return (data as DbRow[]).map(rowToAdmin);
+  } catch (err) {
+    console.error("Failed to search articles:", err);
+    return [];
+  }
 }
 
 export async function getArticleStats() {
-  const { data: all, error } = await supabase
-    .from("articles")
-    .select("status, view_count");
+  try {
+    const { data: all, error } = await supabase
+      .from("articles")
+      .select("status, view_count");
 
-  if (error) throw error;
+    if (error) {
+      console.error("Error fetching article stats:", error.message);
+      return { total: 0, published: 0, drafts: 0, totalViews: 0 };
+    }
 
-  const rows = all as { status: string; view_count: number }[];
-  const published = rows.filter((r) => r.status === "published");
-  const drafts = rows.filter((r) => r.status === "draft");
-  const totalViews = rows.reduce((sum, r) => sum + (r.view_count ?? 0), 0);
+    const rows = all as { status: string; view_count: number }[];
+    const published = rows.filter((r) => r.status === "published");
+    const drafts = rows.filter((r) => r.status === "draft");
+    const totalViews = rows.reduce((sum, r) => sum + (r.view_count ?? 0), 0);
 
-  return {
-    total: rows.length,
-    published: published.length,
-    drafts: drafts.length,
-    totalViews,
-  };
+    return {
+      total: rows.length,
+      published: published.length,
+      drafts: drafts.length,
+      totalViews,
+    };
+  } catch (err) {
+    console.error("Failed to fetch article stats:", err);
+    return { total: 0, published: 0, drafts: 0, totalViews: 0 };
+  }
 }
 
 // --- Public functions (returns only published articles as Article type) ---
@@ -250,9 +310,13 @@ export async function getAllPublishedArticles(): Promise<Article[]> {
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching published articles:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch published articles:", err);
     return [];
   }
 }
@@ -268,7 +332,8 @@ export async function getArticleBySlug(slug: string): Promise<Article | undefine
 
     if (error || !data) return undefined;
     return adminToArticle(rowToAdmin(data as DbRow));
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch article by slug:", err);
     return undefined;
   }
 }
@@ -282,9 +347,13 @@ export async function getArticlesByCategory(category: string): Promise<Article[]
       .eq("status", "published")
       .order("published_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching articles by category:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch articles by category:", err);
     return [];
   }
 }
@@ -298,9 +367,13 @@ export async function getFeaturedArticles(): Promise<Article[]> {
       .eq("is_featured", true)
       .order("published_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching featured articles:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch featured articles:", err);
     return [];
   }
 }
@@ -314,9 +387,13 @@ export async function getBreakingNews(): Promise<Article[]> {
       .eq("is_breaking", true)
       .order("published_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching breaking news:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch breaking news:", err);
     return [];
   }
 }
@@ -330,9 +407,13 @@ export async function getMostReadArticles(): Promise<Article[]> {
       .order("view_count", { ascending: false })
       .limit(5);
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching most read articles:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch most read articles:", err);
     return [];
   }
 }
@@ -347,9 +428,13 @@ export async function searchArticles(query: string): Promise<Article[]> {
       .or(`title.ilike.${q},summary.ilike.${q}`)
       .order("published_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error searching articles:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to search articles:", err);
     return [];
   }
 }
@@ -368,9 +453,13 @@ export async function getRelatedArticles(
       .order("published_at", { ascending: false })
       .limit(4);
 
-    if (error) throw error;
+    if (error) {
+      console.error("Error fetching related articles:", error.message);
+      return [];
+    }
     return (data as DbRow[]).map(rowToAdmin).map(adminToArticle);
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch related articles:", err);
     return [];
   }
 }
