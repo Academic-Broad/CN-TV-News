@@ -94,6 +94,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                       alt={heroArticle.title}
                       fill
                       priority
+                      unoptimized
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       sizes="(max-width: 1024px) 100vw, 66vw"
                     />

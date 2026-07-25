@@ -28,6 +28,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               src={getImageSrc(article.image)}
               alt={article.title}
               fill
+              unoptimized
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="96px"
             />
@@ -60,6 +61,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               src={getImageSrc(article.image)}
               alt={article.title}
               fill
+              unoptimized
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="288px"
             />
@@ -103,6 +105,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
             src={getImageSrc(article.image)}
             alt={article.title}
             fill
+            unoptimized
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

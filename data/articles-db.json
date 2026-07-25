@@ -18,46 +18,6 @@
     "updatedAt": "2026-07-17T00:49:12.757Z"
   },
   {
-    "id": "1",
-    "slug": "quantum-computing-breakthrough-could-revolutionize-cryptography",
-    "title": "Quantum Computing Breakthrough Could Revolutionize Modern Cryptography",
-    "summary": "Scientists at MIT have demonstrated a 1000-qubit quantum processor that can solve complex encryption problems in minutes.",
-    "content": "In a landmark achievement that could reshape the landscape of digital security, researchers at the Massachusetts Institute of Technology have successfully demonstrated a quantum processor capable of solving complex cryptographic problems that would take classical computers thousands of years.\n\nThe breakthrough, published Thursday in the journal Nature, details the creation of a 1,000-qubit quantum processor that maintains coherence long enough to perform practical calculations.\n\nWe've crossed a critical threshold, said Dr. Elena Vasquez, the lead researcher on the project. This isn't just an incremental improvement — it's a fundamental shift in what's computationally possible.",
-    "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=600&fit=crop",
-    "category": "tech",
-    "authorId": "sarah-chen",
-    "publishedAt": "2026-07-14T10:30:00Z",
-    "status": "published",
-    "viewCount": 28450,
-    "tags": [
-      "quantum computing",
-      "cybersecurity",
-      "technology"
-    ],
-    "createdAt": "2026-07-14T09:00:00Z",
-    "updatedAt": "2026-07-14T10:30:00Z"
-  },
-  {
-    "id": "2",
-    "slug": "global-climate-summit-reaches-historic-agreement",
-    "title": "Global Climate Summit Reaches Historic Agreement on Carbon Emissions",
-    "summary": "World leaders commit to a 60% reduction in carbon emissions by 2035, establishing the most ambitious climate targets in history.",
-    "content": "In what environmental advocates are calling the most significant climate agreement since the Paris Accord, representatives from 195 nations have committed to reducing carbon emissions by 60% below 2020 levels by 2035.\n\nThe agreement, reached after two weeks of intense negotiations in Geneva, includes binding targets for the world's largest economies and a $500 billion annual fund to help developing nations transition to clean energy.",
-    "image": "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=1200&h=600&fit=crop",
-    "category": "world",
-    "authorId": "james-mitchell",
-    "publishedAt": "2026-07-14T08:15:00Z",
-    "status": "published",
-    "viewCount": 19230,
-    "tags": [
-      "climate change",
-      "summit",
-      "emissions"
-    ],
-    "createdAt": "2026-07-13T14:00:00Z",
-    "updatedAt": "2026-07-14T08:15:00Z"
-  },
-  {
     "id": "4",
     "slug": "global-markets-rally-fed-interest-rate-decision",
     "title": "Global Markets Surge After Federal Reserve Signals Rate Cuts",
@@ -96,45 +56,5 @@
     ],
     "createdAt": "2026-07-12T16:00:00Z",
     "updatedAt": "2026-07-13T09:30:00Z"
-  },
-  {
-    "id": "7",
-    "slug": "olympic-preparations-2028-los-angeles",
-    "title": "Los Angeles 2028 Olympics Unveil Revolutionary Venue Designs",
-    "summary": "Organizers reveal $1.5 billion venue plan featuring floating aquatic center and solar-powered stadiums.",
-    "content": "The organizing committee for the 2028 Los Angeles Olympics has unveiled ambitious plans for competition venues that officials say will set new standards for sustainability and architectural innovation.\n\nThe centerpiece of the design is a floating aquatic center to be constructed in the Pacific Ocean off the coast of Long Beach.",
-    "image": "https://images.unsplash.com/photo-1569517282132-25d22f4573e6?w=1200&h=600&fit=crop",
-    "category": "sports",
-    "authorId": "alex-johnson",
-    "publishedAt": "2026-07-12T11:00:00Z",
-    "status": "published",
-    "viewCount": 12450,
-    "tags": [
-      "olympics",
-      "los angeles",
-      "sports"
-    ],
-    "createdAt": "2026-07-11T09:00:00Z",
-    "updatedAt": "2026-07-12T11:00:00Z"
-  },
-  {
-    "id": "8",
-    "slug": "renewable-energy-solar-panel-efficiency-record",
-    "title": "New Solar Panel Technology Breaks Efficiency Record at 47.6%",
-    "summary": "Researchers achieve a breakthrough in perovskite-silicon tandem solar cells, nearly doubling current commercial panel efficiency.",
-    "content": "Scientists at the National Renewable Energy Laboratory have achieved a new world record in solar cell efficiency, creating a perovskite-silicon tandem cell that converts 47.6% of sunlight into electricity.\n\nThis represents the culmination of five years of research into tandem cell technology.",
-    "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=600&fit=crop",
-    "category": "science",
-    "authorId": "maria-rodriguez",
-    "publishedAt": "2026-07-11T13:15:00Z",
-    "status": "draft",
-    "viewCount": 0,
-    "tags": [
-      "solar energy",
-      "sustainability",
-      "breakthrough"
-    ],
-    "createdAt": "2026-07-11T10:00:00Z",
-    "updatedAt": "2026-07-11T13:15:00Z"
   }
 ]

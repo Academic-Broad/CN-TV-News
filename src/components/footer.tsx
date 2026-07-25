@@ -9,11 +9,11 @@ export function Footer() {
           {/* Logo and description */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center bg-[#4169E1] text-white font-bold text-lg">
-                CN
+              <div className="flex h-20 w-21 items-center justify-center border-2  bg-[#4169E1] text-white font-bold text-lg">
+                  CN-TV NEWS
               </div>
               <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                CN TV
+                CN-TV NEWS 
               </span>
             </Link>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -85,7 +85,6 @@ export function Footer() {
         <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700">
           <p className="text-center text-xs text-gray-500 dark:text-gray-400">
             &copy; {new Date().getFullYear()} CN TV News. All rights reserved.
-            Built with Next.js, Tailwind CSS, and Lucide icons.
           </p>
         </div>
       </div>

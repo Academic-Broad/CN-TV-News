@@ -144,6 +144,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           alt={article.title}
           fill
           priority
+          unoptimized
           className="object-cover"
           sizes="(max-width: 896px) 100vw, 896px"
         />

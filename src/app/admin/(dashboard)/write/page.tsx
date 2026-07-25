@@ -75,48 +75,36 @@ function ImageUploader({
     setPreview(value);
   }, [value]);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File must be under 5MB");
+      if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
-    const localPreview = URL.createObjectURL(file);
-    setPreview(localPreview);
     setUploading(true);
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Upload failed");
-      }
-
-      const { url } = await res.json();
-      setPreview(url);
-      onChange(url);
-      toast.success("Image uploaded successfully");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Upload failed");
-      setPreview(value);
-    } finally {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setPreview(base64);
+      onChange(base64);
       setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+      toast.success("Image loaded successfully");
+    };
+    reader.onerror = () => {
+      toast.error("Failed to read image file");
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleRemove = () => {
