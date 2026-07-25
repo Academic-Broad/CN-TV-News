@@ -7,7 +7,7 @@ import { Badge } from "./ui/badge";
 import type { Article } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { getCategoryBySlug } from "@/data/categories";
-import { getRelativeTime, getReadingTime, getImageSrc } from "@/lib/utils";
+import { getRelativeTime, getReadingTime, getImageSrc, stripHtml } from "@/lib/utils";
 
 interface ArticleCardProps {
   article: Article;
@@ -76,7 +76,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               {article.title}
             </h2>
             <p className="mt-2 text-sm text-gray-600 line-clamp-2 dark:text-gray-400">
-              {article.summary}
+              {stripHtml(article.summary)}
             </p>
             <div className="mt-3 flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
               {author && <span>{author.name}</span>}
@@ -88,7 +88,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
                 <Eye className="h-3 w-3" />
                 {article.viewCount.toLocaleString()}
               </span>
-              <span>{getReadingTime(article.content)} min read</span>
+              <span>{getReadingTime(stripHtml(article.content))} min read</span>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
           {article.title}
         </h3>
         <p className="mt-1 text-sm text-gray-600 line-clamp-2 dark:text-gray-400">
-          {article.summary}
+          {stripHtml(article.summary)}
         </p>
         <div className="mt-2 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
           {author && <span>{author.name}</span>}

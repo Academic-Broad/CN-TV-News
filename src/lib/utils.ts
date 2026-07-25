@@ -39,3 +39,7 @@ export function getImageSrc(image?: string | null): string {
   return image;
 }
 
+export function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+}
+

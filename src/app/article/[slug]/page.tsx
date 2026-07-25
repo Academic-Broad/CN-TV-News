@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Eye, Share2, Bookmark, ArrowLeft } from "lucide-react";
+import { Clock, Eye, ArrowLeft } from "lucide-react";
 import { getAllPublishedArticles, getArticleBySlug, getRelatedArticles } from "@/lib/mockDb";
 import { authors } from "@/data/authors";
 import { getCategoryBySlug } from "@/data/categories";
 import { getReadingTime, formatDate, getImageSrc } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/article-card";
+import { ArticleShareButtons } from "@/components/article-share-buttons";
 import type { Metadata } from "next";
 
 interface ArticlePageProps {
@@ -43,9 +44,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const category = getCategoryBySlug(article.category);
   const relatedArticles = getRelatedArticles(article.id, article.category);
   const readingTime = getReadingTime(article.content);
-
-  // Split content into paragraphs
-  const paragraphs = article.content.split("\n\n").filter((p) => p.trim());
 
   return (
     <article className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -121,18 +119,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
-            <button
-              className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Share"
-            >
-              <Share2 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            </button>
-            <button
-              className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Bookmark"
-            >
-              <Bookmark className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            </button>
+            <ArticleShareButtons title={article.title} summary={article.summary || article.title} />
           </div>
         </div>
       </header>
@@ -151,11 +138,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </div>
 
       {/* Article content */}
-      <div className="article-content">
-        {paragraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
-      </div>
+      <div
+        className="article-content"
+        dangerouslySetInnerHTML={{ __html: article.content }}
+      />
 
       {/* Tags */}
       <div className="mt-8 flex flex-wrap gap-2">
