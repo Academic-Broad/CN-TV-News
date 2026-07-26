@@ -16,9 +16,12 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log("Submitting Payload:", JSON.stringify(body, null, 2));
+
     const { title, summary, content, image, category, authorId, publishedAt, status, tags, isBreaking, isFeatured } = body;
 
     if (!title || !category) {
+      console.error("Validation Error: Missing required fields", { title: !!title, category: !!category });
       return NextResponse.json(
         { error: "Title and category are required" },
         { status: 400 }
@@ -40,7 +43,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(article, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  } catch (err) {
+    console.error("Supabase Database Error:", err);
+    const message = err instanceof Error ? err.message : "Invalid request body";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

@@ -440,7 +440,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Last Updated</dt>
-              <dd className="text-sm font-medium">
+              <dd className="text-sm font-medium" suppressHydrationWarning>
                 {new Date().toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
