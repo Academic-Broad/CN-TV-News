@@ -264,7 +264,10 @@ function WriteArticleForm() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed to save");
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to save");
+      }
 
       toast.success(
         status === "published"
@@ -272,8 +275,8 @@ function WriteArticleForm() {
           : "Draft saved successfully!"
       );
       router.push("/admin/articles");
-    } catch {
-      toast.error("Failed to save article. Please try again.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save article. Please try again.");
     } finally {
       setLoading(false);
     }

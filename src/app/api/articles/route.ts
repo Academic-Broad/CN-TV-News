@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getAllArticles, createArticle } from "@/lib/mockDb";
+import { getAllArticles } from "@/lib/mockDb";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
@@ -18,33 +19,44 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log("Submitting Payload:", JSON.stringify(body, null, 2));
 
-    const { title, summary, content, image, category, authorId, publishedAt, status, tags, isBreaking, isFeatured } = body;
-
-    if (!title || !category) {
-      console.error("Validation Error: Missing required fields", { title: !!title, category: !!category });
+    if (!body.title || !body.category) {
+      console.error("Validation Error: Missing required fields", { title: !!body.title, category: !!body.category });
       return NextResponse.json(
         { error: "Title and category are required" },
         { status: 400 }
       );
     }
 
-    const article = await createArticle({
-      title,
-      summary: summary || "",
-      content: content || "",
-      image: image || "",
-      category,
-      authorId: authorId || "admin",
-      publishedAt: publishedAt || new Date().toISOString(),
-      status: status || "draft",
-      tags: tags || [],
-      isBreaking: isBreaking || false,
-      isFeatured: isFeatured || false,
-    });
+    const slug = body.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") + "-" + Date.now();
 
-    return NextResponse.json(article, { status: 201 });
+    const payload = {
+      title: body.title,
+      slug,
+      category: body.category || "General",
+      content: body.content || "",
+      summary: body.summary || body.content?.replace(/<[^>]+>/g, "").substring(0, 150) || "",
+      image: body.image || "",
+      status: "published" as const,
+      created_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from("articles")
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Supabase Database Error:", error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json(data, { status: 201 });
   } catch (err) {
-    console.error("Supabase Database Error:", err);
+    console.error("Unexpected Error:", err);
     const message = err instanceof Error ? err.message : "Invalid request body";
     return NextResponse.json({ error: message }, { status: 400 });
   }
