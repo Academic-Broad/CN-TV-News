@@ -65,6 +65,8 @@ export function RichTextEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
+        link: false,
+        underline: false,
       }),
       Placeholder.configure({ placeholder }),
       LinkExtension.configure({

@@ -32,6 +32,8 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "") + "-" + Date.now();
 
+    const status = body.status === "draft" ? "draft" : "published";
+
     const payload = {
       title: body.title,
       slug,
@@ -39,7 +41,12 @@ export async function POST(request: Request) {
       content: body.content || "",
       summary: body.summary || body.content?.replace(/<[^>]+>/g, "").substring(0, 150) || "",
       image: body.image || "",
-      status: "published" as const,
+      status,
+      author_id: body.authorId || "admin",
+      tags: Array.isArray(body.tags) ? body.tags : [],
+      published_at: body.publishedAt
+        ? new Date(body.publishedAt).toISOString()
+        : new Date().toISOString(),
       created_at: new Date().toISOString(),
     };
 
